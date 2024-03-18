@@ -1,44 +1,27 @@
-import { Elysia, t } from "elysia";
+import { Elysia } from 'elysia'
 
-const posts = [
-  {
-    id: 1,
-    title: "Hello, World!",
-  },
-  {
-    id: 2,
-    title: "Hello, Elysia!",
-  },
-];
+import postDto from '@/server/dto/post.dto'
+import { authMiddleware } from '../middleware'
+import db from '@/prisma'
 
-export const postRoute = new Elysia({ prefix: "/post" })
-  .get("/getAll", async () => ({ posts }))
+export const postRoute = new Elysia({ prefix: '/post' })
+  .use(postDto)
 
-  .get("/id/:id", async ({ params: { id } }) => ({
-    post: posts.find((post) => post.id === Number(id)),
-  }))
+  .get('/getAll', async () => {
+    return await db.post.findMany({ include: { author: true } })
+  })
+
   .post(
-    "/create",
-    async ({ body }) => {
-      posts.push({
-        id: posts.length + 1,
-        title: body.title,
-      });
-      return {
-        id: posts.length,
-        title: body.title,
-      };
+    '/create',
+    async ({ request, body: { title, content } }) => {
+      const newPost = await db.post.create({
+        data: { title, content, author: { connect: { id: request.user.id } } },
+      })
+      if (!newPost) throw new Error('Post not created')
+      return { message: 'Post created' }
     },
     {
-      body: t.Object({
-        title: t.String({ minLength: 4 }),
-      }),
+      body: 'create',
+      beforeHandle: authMiddleware,
     },
   )
-  .delete("/delete/:id", async ({ params: { id } }) => {
-    const index = posts.findIndex((post) => post.id === Number(id));
-    if (index === -1) return { message: "Not found" };
-
-    posts.splice(index, 1);
-    return { message: "Deleted" };
-  });

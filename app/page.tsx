@@ -1,68 +1,36 @@
-"use client";
+import type { NextPage } from 'next'
 
-import { getQueryClient } from "@/components/provider";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { api } from "@/lib/api";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import type { NextPage } from "next";
-import { toast } from "sonner";
+import CreateForm from '@/components/create'
+import PostList from '@/components/post-list'
+import { auth } from '@/server/auth'
+import Link from 'next/link'
+import { buttonVariants } from '@/components/ui/button'
 
-const Page: NextPage = () => {
-  const { data, isLoading } = useQuery({
-    queryKey: ["posts"],
-    queryFn: async () => {
-      const { data } = await api.post.getAll.get();
-      return data;
-    },
-  });
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: async ({ title }: { title: string }) => {
-      const { error } = await api.post.create.post({ title });
-      if (error) throw new Error("Failed to create post");
-    },
-    onSuccess: () => {
-      getQueryClient().invalidateQueries({ queryKey: ["posts"] });
-      toast.success("Post created");
-    },
-    onError: (error) => toast.error(error.message),
-  });
-
+const Page: NextPage = async () => {
+  const session = await auth()
   return (
     <>
-      <form
-        action={(formData) => {
-          const title = String(formData.get("title") ?? "");
-          mutate({ title });
-        }}
-      >
-        <div className="space-y-2">
-          <Label htmlFor="title">Title</Label>
-          <Input type="text" name="title" />
-        </div>
+      <h1 className="text-center text-4xl font-bold">
+        Next.js + Elysiajs template
+        <br />
+        using Prisma, React Query, Tailwind CSS, and more
+      </h1>
 
-        <Button type="submit" disabled={isPending}>
-          Create Post
-        </Button>
-      </form>
+      <p className="mt-4 text-center text-lg">
+        This is a template for building a fullstack application using Next.js and Elysiajs. It includes authentication,
+        database, and more.
+      </p>
 
-      <div>
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          <ul>
-            {data?.posts.map((post) => (
-              <li key={post.id}>
-                {post.id}. {post.title}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      {!session || !session.user ? (
+        <Link href="/api/auth/signin" className={buttonVariants({ className: 'w-full' })}>
+          Sign in
+        </Link>
+      ) : (
+        <CreateForm />
+      )}
+      <PostList />
     </>
-  );
-};
+  )
+}
 
-export default Page;
+export default Page
