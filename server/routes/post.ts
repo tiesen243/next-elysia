@@ -1,8 +1,8 @@
 import { Elysia } from 'elysia'
 
+import db from '@/prisma'
 import postDto from '@/server/dto/post.dto'
 import { authMiddleware } from '../middleware'
-import db from '@/prisma'
 
 export const postRoute = new Elysia({ prefix: '/post' })
   .use(postDto)

@@ -1,20 +1,29 @@
-import { api } from '@/lib/api'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
+'use client'
 
-const PostList: React.FC = async () => {
-  const { data, error } = await api.post.getAll.get()
-  if (error) return <div>Error: {String(error.value)}</div>
+import { useQuery } from '@tanstack/react-query'
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { api } from '@/lib/api'
+
+const PostList: React.FC = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryFn: () => api.post.getAll.get().then((res) => res.data),
+    queryKey: ['posts'],
+  })
+
+  if (isLoading) return <div>Loading...</div>
+  if (isError) return <div>Error</div>
 
   return (
-    <ul className="grid grid-cols-1 gap-4 md:grid-cols-3">
-      {data.map((post) => (
+    <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      {data?.map((post) => (
         <li key={post.id}>
-          <Card>
+          <Card className="h-full">
             <CardHeader>
               <CardTitle>{post.title}</CardTitle>
               <CardDescription>{post.author.name}</CardDescription>
             </CardHeader>
-            <CardContent>{post.content}</CardContent>
+            <CardContent className="break-all">{post.content}</CardContent>
           </Card>
         </li>
       ))}
