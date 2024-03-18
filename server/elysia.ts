@@ -26,6 +26,8 @@ export const app = new Elysia({ prefix: '/api/elysia' })
   .use(userRoute)
   .use(postRoute)
 
+app.get('/', () => ({ message: 'Hello world' }))
+
 export const GET = app.handle
 export const POST = app.handle
 export const PATCH = app.handle
