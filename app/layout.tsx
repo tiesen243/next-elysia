@@ -1,18 +1,16 @@
 import type { Metadata, NextPage } from 'next'
 import { Inter } from 'next/font/google'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
+import { siteConfig } from '@/lib/site'
 
-export const metadata: Metadata = {
-  title: 'Next.js + Elysiajs',
-  description: 'A Next.js starter with Elysiajs',
-}
+export const metadata: Metadata = siteConfig
 
 import Header from '@/components/header'
 import Provider from '@/components/provider'
 import { Toaster } from '@/components/ui/sonner'
 
 import './globals.css'
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
 const RootLayout: NextPage<React.PropsWithChildren> = ({ children }) => (
   <html lang="en" className="dark" suppressHydrationWarning>
     <body className={inter.variable}>

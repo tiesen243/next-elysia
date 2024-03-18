@@ -1,24 +1,27 @@
 'use client'
 
-import { useMutation } from '@tanstack/react-query'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import * as card from '@/components/ui/card'
 import { FormField } from '@/components/ui/form-field'
-import { mutationFn } from './_action'
+import { api, useMutation } from '@/lib/api'
 
 const Page: NextPage = () => {
   const { push } = useRouter()
-  const { mutate, isPending } = useMutation({
-    mutationFn,
+  const { mutate, error, isPending } = useMutation<{ name: string; email: string; password: string }>({
+    mutationFn: async (inp) => {
+      const { data, error } = await api.user.signup.post(inp)
+      if (error) throw error.value
+      return data
+    },
     onSuccess: () => {
       toast.success('Sign up success')
       push('/api/auth/signin')
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error) => !error.fieldsError && toast.error(String(error)),
   })
 
   return (
@@ -31,23 +34,23 @@ const Page: NextPage = () => {
         })
       }
     >
-      <Card>
-        <CardHeader>
-          <CardTitle>Sign Up</CardTitle>
-        </CardHeader>
+      <card.Card>
+        <card.CardHeader>
+          <card.CardTitle>Sign Up</card.CardTitle>
+        </card.CardHeader>
 
-        <CardContent className="space-y-4">
-          <FormField label="Name" name="name" />
-          <FormField label="Email" name="email" />
-          <FormField label="Password" name="password" type="password" />
-        </CardContent>
+        <card.CardContent className="space-y-4">
+          <FormField label="Name" name="name" message={error?.fieldsError?.['name']} />
+          <FormField label="Email" name="email" message={error?.fieldsError?.['email']} />
+          <FormField label="Password" name="password" type="password" message={error?.fieldsError?.['password']} />
+        </card.CardContent>
 
-        <CardFooter>
+        <card.CardFooter>
           <Button className="w-full" type="submit" isLoading={isPending}>
             Sign Up
           </Button>
-        </CardFooter>
-      </Card>
+        </card.CardFooter>
+      </card.Card>
     </form>
   )
 }

@@ -19,9 +19,9 @@ model User {
 }
 
 model Post {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  title    String
-  content  String
-  author   User   @relation(fields: [authorId], references: [id])
-  authorId String @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String   @db.ObjectId
+  createdAt DateTime @default(now())
 }

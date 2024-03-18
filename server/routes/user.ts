@@ -6,6 +6,7 @@ import db from '@/prisma'
 
 export const userRoute = new Elysia({ prefix: '/user' })
   .use(userDto)
+
   .post(
     '/signup',
     async ({ body: { name, email, password } }) => {
@@ -20,6 +21,7 @@ export const userRoute = new Elysia({ prefix: '/user' })
     },
     { body: 'signup' },
   )
+
   .post(
     '/signin',
     async ({ body: { email, password } }) => {

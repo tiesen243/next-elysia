@@ -1,10 +1,10 @@
 import type { NextPage } from 'next'
+import Link from 'next/link'
 
 import CreateForm from '@/components/create-form'
 import PostList from '@/components/post-list'
-import { auth } from '@/server/auth'
-import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
+import { auth } from '@/server/auth'
 
 const Page: NextPage = async () => {
   const session = await auth()
