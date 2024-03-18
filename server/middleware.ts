@@ -1,7 +1,7 @@
-import { auth } from './auth'
+import { auth } from '@/server/auth'
 
-export const authMiddleware = async ({ set, request }: any) => {
+export const authMiddleware = async ({ store, set }: any) => {
   const session = await auth()
   if (!session || !session.user) return (set.status = 'Unauthorized')
-  request.user = session.user
+  store.user = session.user
 }

@@ -31,14 +31,14 @@ const Page: NextPage = async () => {
         </p>
       </article>
 
-      {!session || !session.user ? (
-        <Link href="/api/auth/signin" className={buttonVariants({ className: 'w-full' })}>
-          Sign in
-        </Link>
-      ) : (
-        <CreateForm />
-      )}
-      <PostList />
+      {/* {!session || !session.user ? ( */}
+      {/*   <Link href="/api/auth/signin" className={buttonVariants({ className: 'w-full' })}> */}
+      {/*     Sign in */}
+      {/*   </Link> */}
+      {/* ) : ( */}
+      <CreateForm />
+      {/* )} */}
+      <PostList userId={!session || !session.user ? '' : session.user.id} />
     </>
   )
 }

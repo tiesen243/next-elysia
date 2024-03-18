@@ -7,11 +7,12 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
 import { FormField } from '@/components/ui/form-field'
-import { api, useMutation } from '@/lib/api'
+import { api } from '@/lib/api'
+import { useMutation } from '@tanstack/react-query'
 
 const Page: NextPage = () => {
   const { push } = useRouter()
-  const { mutate, error, isPending } = useMutation<{ name: string; email: string; password: string }>({
+  const { mutate, error, isPending } = useMutation<any, any, { name: string; email: string; password: string }>({
     mutationFn: async (inp) => {
       const { data, error } = await api.user.signup.post(inp)
       if (error) throw error.value

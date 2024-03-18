@@ -2,14 +2,13 @@ import { Elysia } from 'elysia'
 import bcrypt from 'bcryptjs'
 
 import userDto from '@/server/dto/user.dto'
-import db from '@/prisma'
 
 export const userRoute = new Elysia({ prefix: '/user' })
   .use(userDto)
 
   .post(
     '/signup',
-    async ({ body: { name, email, password } }) => {
+    async ({ store: { db }, body: { name, email, password } }) => {
       const isEmailExist = await db.user.findUnique({ where: { email } })
       if (isEmailExist) throw 'Email already exist'
 
@@ -24,7 +23,7 @@ export const userRoute = new Elysia({ prefix: '/user' })
 
   .post(
     '/signin',
-    async ({ body: { email, password } }) => {
+    async ({ store: { db }, body: { email, password } }) => {
       const user = await db.user.findUnique({ where: { email } })
       if (!user) throw new Error('Email not found')
 

@@ -18,6 +18,8 @@ export const app = new Elysia({ prefix: '/api/elysia' })
             {} as Record<string, string>,
           ),
         }
+      default:
+        return { message: error.message }
     }
   })
   .use(swagger())

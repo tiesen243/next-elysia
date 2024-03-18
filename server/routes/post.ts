@@ -1,35 +1,39 @@
 import { Elysia } from 'elysia'
 
-import db from '@/prisma'
 import postDto from '@/server/dto/post.dto'
-import { authMiddleware } from '../middleware'
+import { authMiddleware } from '@/server/middleware'
 
 export const postRoute = new Elysia({ prefix: '/post' })
   .use(postDto)
 
-  .get('/getAll', async () => {
+  // public routes
+
+  .get('/getAll', async ({ store: { db } }) => {
     return await db.post.findMany({ include: { author: true }, orderBy: { createdAt: 'desc' } })
   })
 
+  // protected routes
+  .state({ user: { id: '' } })
+  .onBeforeHandle(authMiddleware)
+
   .post(
     '/create',
-    async ({ request, body: { content } }) => {
-      const newPost = await db.post.create({
-        data: { content, author: { connect: { id: request.user.id } } },
-      })
+    async ({ store: { db, user }, body: { content } }) => {
+      const newPost = await db.post.create({ data: { content, author: { connect: { id: user.id } } } })
       if (!newPost) throw new Error('Post not created')
       return { message: 'Post created' }
     },
-    { body: 'create', beforeHandle: authMiddleware },
+    { body: 'create' },
   )
+
   .delete(
     '/delete',
-    async ({ body: { id }, request }) => {
+    async ({ body: { id }, store: { user, db } }) => {
       const post = await db.post.findUnique({ where: { id } })
       if (!post) throw new Error('Post not found')
-      if (post.authorId !== request.user.id) throw new Error('You are not the author of this post')
+      if (post.authorId !== user.id) throw new Error('You are not the author of this post')
       await db.post.delete({ where: { id } })
       return { message: 'Post deleted' }
     },
-    { body: 'delete', beforeHandle: authMiddleware },
+    { body: 'delete' },
   )
