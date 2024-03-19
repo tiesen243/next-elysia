@@ -36,6 +36,6 @@ You can access swagger ui at [/api/elysia/swagger](http://localhost:3000/api/ely
 
 ## Learn More
 
-- Documentation: [here](https://tiesen.id.vn/blogs/next-elysia)
+- Documentation: [here](https://tiesen.id.vn/blogs/next-elysia.html)
 - ElysiaJS: [https://elysiajs.com/](https://elysiajs.com/)
 - Next.js: [https://nextjs.org/](https://nextjs.org/)
