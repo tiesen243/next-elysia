@@ -1,9 +1,10 @@
 import { Elysia } from 'elysia'
 
 import postDto from '@/server/dto/post.dto'
-import { authMiddleware } from '@/server/middleware'
+import { authMiddleware, base } from '@/server/plugin'
 
 export const postRoute = new Elysia({ prefix: '/post' })
+  .use(base)
   .use(postDto)
 
   // public routes
@@ -13,7 +14,6 @@ export const postRoute = new Elysia({ prefix: '/post' })
   })
 
   // protected routes
-  .state({ user: { id: '' } })
   .onBeforeHandle(authMiddleware)
 
   .post(

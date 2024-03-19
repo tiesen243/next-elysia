@@ -2,8 +2,10 @@ import { Elysia } from 'elysia'
 import bcrypt from 'bcryptjs'
 
 import userDto from '@/server/dto/user.dto'
+import { base } from '@/server/plugin'
 
 export const userRoute = new Elysia({ prefix: '/user' })
+  .use(base)
   .use(userDto)
 
   .post(

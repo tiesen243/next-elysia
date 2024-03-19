@@ -1,8 +1,8 @@
 import swagger from '@elysiajs/swagger'
 import { Elysia } from 'elysia'
 
-import { postRoute } from './routes/post'
-import { userRoute } from './routes/user'
+import { postRoute } from '@/server/routes/post.route'
+import { userRoute } from '@/server/routes/user.route'
 
 export const app = new Elysia({ prefix: '/api/elysia' })
   .onError(({ error, code }) => {
