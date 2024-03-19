@@ -20,10 +20,10 @@ const CreateForm: React.FC = () => {
       return data
     },
     onError: (error) => !error.fieldsError && toast.error(error.message),
-    onSuccess: ({ message }) => {
+    onSuccess: async ({ message }) => {
       toast.success(message)
       formRef.current?.reset()
-      getQueryClient().invalidateQueries({ queryKey: ['posts'] })
+      await getQueryClient().invalidateQueries({ queryKey: ['posts'] })
     },
   })
   return (

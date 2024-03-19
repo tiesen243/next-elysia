@@ -1,8 +1,6 @@
-import { app } from '@/server/elysia'
 import { edenTreaty } from '@elysiajs/eden'
-import { baseUrl } from './site'
 
-// uncomment the line below will throw an error
-/* export const api = treaty(app).api.elysia */
+import type { app } from '@/server/elysia'
+import { baseUrl } from './site'
 
 export const api = edenTreaty<typeof app>(baseUrl).api.elysia

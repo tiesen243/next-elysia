@@ -11,7 +11,7 @@ import { api } from '@/lib/api'
 import { useMutation } from '@tanstack/react-query'
 
 const Page: NextPage = () => {
-  const { push } = useRouter()
+  const router = useRouter()
   const { mutate, error, isPending } = useMutation<any, any, { name: string; email: string; password: string }>({
     mutationFn: async (inp) => {
       const { data, error } = await api.user.signup.post(inp)
@@ -20,7 +20,7 @@ const Page: NextPage = () => {
     },
     onSuccess: () => {
       toast.success('Sign up success')
-      push('/api/auth/signin')
+      router.push('/api/auth/signin')
     },
     onError: (error) => !error.fieldsError && toast.error(String(error)),
   })
@@ -41,9 +41,9 @@ const Page: NextPage = () => {
         </card.CardHeader>
 
         <card.CardContent className="space-y-4">
-          <FormField label="Name" name="name" message={error?.fieldsError?.['name']} />
-          <FormField label="Email" name="email" message={error?.fieldsError?.['email']} />
-          <FormField label="Password" name="password" type="password" message={error?.fieldsError?.['password']} />
+          <FormField label="Name" name="name" message={error?.fieldsError?.name} />
+          <FormField label="Email" name="email" message={error?.fieldsError?.email} />
+          <FormField label="Password" name="password" type="password" message={error?.fieldsError?.password} />
         </card.CardContent>
 
         <card.CardFooter>
