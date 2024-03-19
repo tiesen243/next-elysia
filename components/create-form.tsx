@@ -1,25 +1,27 @@
 'use client'
 
+import { useMutation } from '@tanstack/react-query'
+import { SendHorizonalIcon } from 'lucide-react'
 import * as React from 'react'
 import { toast } from 'sonner'
-import { SendHorizonalIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
 import { FormField } from '@/components/ui/form-field'
-import { api, getQueryClient, useMutation } from '@/lib/api'
+import { api } from '@/lib/api'
+import { getQueryClient } from '@/lib/utils'
 
 const CreateForm: React.FC = () => {
   const formRef = React.useRef<HTMLFormElement>(null)
-  const { mutate, error, isPending } = useMutation<{ content: string }>({
-    mutationFn: async (inp) => {
-      const { data, error } = await api.post.create.post(inp)
+  const { mutate, error, isPending } = useMutation({
+    mutationFn: async ({ content }: { content: string }) => {
+      const { data, error } = await api.post.create.post({ content })
       if (error) throw error.value
       return data
     },
-    onError: (error) => !error.fieldsError && toast.error(String(error)),
-    onSuccess: () => {
-      toast.success('Create success')
+    onError: (error) => !error.fieldsError && toast.error(error.message),
+    onSuccess: ({ message }) => {
+      toast.success(message)
       formRef.current?.reset()
       getQueryClient().invalidateQueries({ queryKey: ['posts'] })
     },

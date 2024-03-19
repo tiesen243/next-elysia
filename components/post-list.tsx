@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { XIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import * as card from '@/components/ui/card'
 import { api } from '@/lib/api'
 
 const PostList: React.FC<{ userId: string }> = ({ userId }) => {
@@ -13,17 +13,17 @@ const PostList: React.FC<{ userId: string }> = ({ userId }) => {
     queryKey: ['posts'],
   })
 
-  if (isLoading) return <div>Loading...</div>
-  if (isError) return <div>Error</div>
+  if (isLoading) return <p>Loading...</p>
+  if (isError) return <p>Error</p>
 
   return (
     <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {data?.map((post) => (
         <li key={post.id}>
-          <Card className="h-full">
-            <CardHeader>
-              <CardDescription>{post.author.name}</CardDescription>
-              <CardTitle>{post.content}</CardTitle>
+          <card.Card className="h-full">
+            <card.CardHeader>
+              <card.CardDescription>{post.author.name}</card.CardDescription>
+              <card.CardTitle>{post.content}</card.CardTitle>
 
               {userId === post.author.id && (
                 <Button
@@ -35,8 +35,8 @@ const PostList: React.FC<{ userId: string }> = ({ userId }) => {
                   <XIcon />
                 </Button>
               )}
-            </CardHeader>
-          </Card>
+            </card.CardHeader>
+          </card.Card>
         </li>
       ))}
     </ul>

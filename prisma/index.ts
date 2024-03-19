@@ -10,7 +10,6 @@ const globalForPrisma = globalThis as any as {
 }
 
 const db = globalForPrisma.prisma || prisma()
-
 export default db
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
