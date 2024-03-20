@@ -16,7 +16,6 @@ const Page: NextPage = () => {
   const { mutate, error, isPending } = useMutation<any, Error, SignupDto>({
     mutationFn: async (inp) => {
       const { data, error } = await api.user.signup.post(inp)
-      console.log(data, error?.value)
       if (error) throw error.value
       return data
     },

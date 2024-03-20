@@ -12,7 +12,7 @@ export const app = new Elysia({ prefix: '/api/elysia' })
           message: 'Validation error',
           fieldsError: error.all.reduce(
             (acc, x) => {
-              acc[String(x.path).slice(1)] = x.message
+              acc[String(x.path).slice(1)] = x.schema.error
               return acc
             },
             {} as Record<string, string>,

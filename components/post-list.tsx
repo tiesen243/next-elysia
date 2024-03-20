@@ -30,7 +30,7 @@ const PostList: React.FC<{ userId: string }> = ({ userId }) => {
                   className="absolute right-2 top-2 size-6"
                   variant="destructive"
                   size="icon"
-                  onClick={() => api.post.delete.delete({ id: post.id }).then(() => refetch())}
+                  onClick={() => api.post.delete[post.id].delete().then(() => refetch())}
                 >
                   <XIcon />
                 </Button>

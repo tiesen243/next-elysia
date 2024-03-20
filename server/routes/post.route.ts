@@ -29,13 +29,13 @@ export const postRoute = new Elysia({ name: 'Post', prefix: '/post' })
   )
 
   .delete(
-    '/delete',
-    async ({ body: { id }, store: { db }, user }) => {
+    '/delete/:id',
+    async ({ params: { id }, store: { db }, user }) => {
       const post = await db.post.findUnique({ where: { id } })
       if (!post) throw new Error('Post not found')
       if (post.authorId !== user.id) throw new Error('You are not the author of this post')
       await db.post.delete({ where: { id } })
       return { message: 'Post deleted' }
     },
-    { body: 'deletePost', detail: { tags: ['Post'] } },
+    { detail: { tags: ['Post'] } },
   )
