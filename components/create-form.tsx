@@ -13,7 +13,7 @@ import { type CreatePostDto } from '@/server/dto/post.dto'
 
 const CreateForm: React.FC = () => {
   const formRef = React.useRef<HTMLFormElement>(null)
-  const { mutate, error, isPending } = useMutation<any, Error, CreatePostDto>({
+  const { mutate, error, isPending } = useMutation<Res, Error, CreatePostDto>({
     mutationFn: async ({ content }) => {
       const { data, error } = await api.post.create.post({ content })
       if (error) throw error.value
@@ -21,7 +21,8 @@ const CreateForm: React.FC = () => {
     },
     onError: (error) => !error.fieldsError && toast.error(error.message),
     onSuccess: async ({ message }) => {
-      toast.success(!message)
+      console.log(message)
+      toast.success('Post created')
       formRef.current?.reset()
       await getQueryClient().invalidateQueries({ queryKey: ['posts'] })
     },
