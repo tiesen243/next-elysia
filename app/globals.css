@@ -71,7 +71,7 @@
     @apply relative box-border border-border selection:bg-foreground selection:text-background;
   }
   body {
-    @apply min-h-dvh overflow-x-hidden bg-background font-sans text-foreground antialiased;
+    @apply flex min-h-dvh flex-col overflow-x-hidden bg-background font-sans text-foreground antialiased;
   }
 
   /* prettier-ignore  */

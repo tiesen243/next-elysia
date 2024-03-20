@@ -16,7 +16,7 @@ const RootLayout: NextPage<React.PropsWithChildren> = ({ children }) => (
     <body className={inter.variable}>
       <Provider>
         <Header />
-        <main className="container my-4 space-y-4">{children}</main>
+        <main className="container my-4 flex-grow space-y-4">{children}</main>
         <Toaster />
       </Provider>
     </body>
