@@ -36,9 +36,7 @@ const CreateForm: React.FC = () => {
           </Button>
         </card.CardHeader>
         <card.CardFooter>
-          <card.CardDescription className="text-destructive">
-            {error && error.fieldsError?.content}
-          </card.CardDescription>
+          <card.CardDescription className="text-destructive">{error?.fieldsError?.content ?? ''}</card.CardDescription>
         </card.CardFooter>
       </card.Card>
     </form>
