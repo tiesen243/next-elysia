@@ -30,16 +30,16 @@ const CreateForm: React.FC = () => {
     <form ref={formRef} action={(formData: FormData) => mutate({ content: String(formData.get('content')) })}>
       <card.Card>
         <card.CardHeader className="flex-row items-center gap-4 space-y-0">
-          <FormField
-            name="content"
-            placeholder="What's on your mind?"
-            className="flex-grow"
-            message={error?.fieldsError?.content}
-          />
+          <FormField name="content" placeholder="What's on your mind?" className="flex-grow" />
           <Button type="submit" size="icon" isLoading={isPending}>
             <SendHorizonalIcon />
           </Button>
         </card.CardHeader>
+        <card.CardFooter>
+          <card.CardDescription className="text-destructive">
+            {error && error.fieldsError?.content}
+          </card.CardDescription>
+        </card.CardFooter>
       </card.Card>
     </form>
   )
