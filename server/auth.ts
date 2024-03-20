@@ -4,7 +4,6 @@ import 'next-auth/jwt'
 import credentials from 'next-auth/providers/credentials'
 
 import { api } from '@/lib/api'
-import db from '@/prisma'
 
 declare module 'next-auth' {
   interface Session {
@@ -33,7 +32,7 @@ const authOptions = {
           email: String(credentials.email),
           password: String(credentials.password),
         })
-        if (error) throw new Error(String(error.value))
+        if (error) throw new Error(error.value)
 
         return data
       },
@@ -44,7 +43,11 @@ const authOptions = {
   callbacks: {
     jwt: async ({ token, user }) => {
       if (user) token.user = user as User
-      if (token.user.id) token.user = (await db.user.findUnique({ where: { id: token.user.id } })) as User
+
+      // Fetch new user data
+      const { data, error } = await api.user.getById[token.user.id].get()
+      if (error) throw new Error(error.value)
+      if (token.user.id) token.user = data
 
       return token
     },

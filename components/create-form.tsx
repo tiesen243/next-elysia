@@ -8,20 +8,20 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
 import { FormField } from '@/components/ui/form-field'
-import { api } from '@/lib/api'
-import { getQueryClient } from '@/lib/utils'
+import { api, getQueryClient } from '@/lib/api'
+import { type CreatePostDto } from '@/server/dto/post.dto'
 
 const CreateForm: React.FC = () => {
   const formRef = React.useRef<HTMLFormElement>(null)
-  const { mutate, error, isPending } = useMutation({
-    mutationFn: async ({ content }: { content: string }) => {
+  const { mutate, error, isPending } = useMutation<any, Error, CreatePostDto>({
+    mutationFn: async ({ content }) => {
       const { data, error } = await api.post.create.post({ content })
       if (error) throw error.value
       return data
     },
     onError: (error) => !error.fieldsError && toast.error(error.message),
     onSuccess: async ({ message }) => {
-      toast.success(message)
+      toast.success(!message)
       formRef.current?.reset()
       await getQueryClient().invalidateQueries({ queryKey: ['posts'] })
     },

@@ -1,5 +1,6 @@
 'use client'
 
+import { useMutation } from '@tanstack/react-query'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -8,13 +9,14 @@ import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
 import { FormField } from '@/components/ui/form-field'
 import { api } from '@/lib/api'
-import { useMutation } from '@tanstack/react-query'
+import { type SignupDto } from '@/server/dto/user.dto'
 
 const Page: NextPage = () => {
   const router = useRouter()
-  const { mutate, error, isPending } = useMutation<any, any, { name: string; email: string; password: string }>({
+  const { mutate, error, isPending } = useMutation<any, Error, SignupDto>({
     mutationFn: async (inp) => {
       const { data, error } = await api.user.signup.post(inp)
+      console.log(data, error?.value)
       if (error) throw error.value
       return data
     },
@@ -22,7 +24,7 @@ const Page: NextPage = () => {
       toast.success('Sign up success')
       router.push('/api/auth/signin')
     },
-    onError: (error) => !error.fieldsError && toast.error(String(error)),
+    onError: (error) => !error.fieldsError && toast.error(error.message),
   })
 
   return (
