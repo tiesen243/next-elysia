@@ -5,7 +5,6 @@ import Image from 'next/image'
 import CreateForm from '@/components/create-form'
 import PostList from '@/components/post-list'
 import { Button } from '@/components/ui/button'
-import { Typography } from '@/components/ui/typography'
 import { auth } from '@/server/auth'
 
 const Page: NextPage = async () => {
@@ -34,18 +33,7 @@ const Page: NextPage = async () => {
         </div>
       </div>
 
-      <Typography as="blockquote">
-        view Swagger API documentation at{' '}
-        <a href="/api/elysia/swagger" target="_blank" rel="noopener noreferrer">
-          `/api/elysia/swagger`
-        </a>
-      </Typography>
-
       {!session || !session.user ? null : <CreateForm />}
-
-      <Typography as="h2" className="mt-12">
-        View the latest posts
-      </Typography>
 
       <PostList userId={!session || !session.user ? '' : session.user.id} />
     </>
