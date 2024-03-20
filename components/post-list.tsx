@@ -17,7 +17,7 @@ const PostList: React.FC<{ userId: string }> = ({ userId }) => {
   if (isError) return <p>Error</p>
 
   return (
-    <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <ul className="grid grid-cols-1 gap-4 md:grid-cols-3">
       {data?.map((post) => (
         <li key={post.id}>
           <card.Card className="h-full">

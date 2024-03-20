@@ -8,12 +8,15 @@ export const userRoute = new Elysia({ name: 'User', prefix: '/user' })
   .use(base)
   .use(userDto)
 
-  .get('/getById/:id', async ({ store: { db }, params: { id } }) => {
-    const user = await db.user.findUnique({ where: { id } })
-    if (!user) throw new Error('User not found')
-
-    return user
-  })
+  .get(
+    '/getById/:id',
+    async ({ store: { db }, params: { id } }) => {
+      const user = await db.user.findUnique({ where: { id } })
+      if (!user) throw new Error('User not found')
+      return user
+    },
+    { detail: { tags: ['User'] } },
+  )
 
   .post(
     '/signup',
