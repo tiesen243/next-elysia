@@ -5,6 +5,21 @@ import { postRoute } from '@/server/routes/post.route'
 import { userRoute } from '@/server/routes/user.route'
 
 export const app = new Elysia({ prefix: '/api/elysia' })
+  // Plugins
+  .use(
+    swagger({
+      path: '/docs',
+      documentation: {
+        info: { title: 'Next.js + ElysiaJS', version: '1.0.0' },
+        tags: [
+          { name: 'User', description: 'User operations' },
+          { name: 'Post', description: 'Post operations' },
+        ],
+      },
+    }),
+  )
+
+  // Error handling
   .onError(({ error, code }) => {
     switch (code) {
       case 'VALIDATION':
@@ -22,22 +37,10 @@ export const app = new Elysia({ prefix: '/api/elysia' })
         return { message: error.message }
     }
   })
-  .use(
-    swagger({
-      path: '/docs',
-      documentation: {
-        info: { title: 'Next.js + ElysiaJS', version: '1.0.0' },
-        tags: [
-          { name: 'User', description: 'User operations' },
-          { name: 'Post', description: 'Post operations' },
-        ],
-      },
-    }),
-  )
 
   // Routes
   .use(userRoute)
   .use(postRoute)
 
 const { handle } = app
-export { handle as GET, handle as POST, handle as PATCH, handle as DELETE }
+export { handle as DELETE, handle as GET, handle as PATCH, handle as POST }
