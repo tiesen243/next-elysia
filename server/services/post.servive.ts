@@ -6,7 +6,10 @@ import type { CreatePostDto } from '@/server/models/post.model'
 
 export default class PostService {
   async getPosts() {
-    const posts = await db.post.findMany({ include: { author: true }, orderBy: { createdAt: 'desc' } })
+    const posts = await db.post.findMany({
+      include: { author: { select: { id: true, name: true } } },
+      orderBy: { createdAt: 'desc' },
+    })
     if (!posts || posts.length === 0) return error('Not Found', { message: 'No posts found' })
     return posts
   }
