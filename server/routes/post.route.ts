@@ -1,8 +1,8 @@
 import { Elysia } from 'elysia'
 
+import PostModel from '@/server/models/post.model'
 import AuthService from '@/server/services/auth.service'
 import PostService from '@/server/services/post.servive'
-import PostModel from '@/server/models/post.model'
 
 export const postRoute = new Elysia({ name: 'Route.Post', prefix: '/post' })
   // Set up

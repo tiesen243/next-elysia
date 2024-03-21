@@ -33,7 +33,8 @@ const Page: NextPage = async () => {
         </div>
       </div>
 
-      {!session || !session.user ? null : <CreateForm />}
+      {/* {!session || !session.user ? null : <CreateForm />} */}
+      <CreateForm />
 
       <PostList userId={!session || !session.user ? '' : session.user.id} />
     </>

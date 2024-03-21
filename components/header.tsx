@@ -16,7 +16,7 @@ const Header: React.FC = async () => {
       <div className="container flex items-center justify-between">
         {!session || !session.user ? (
           <span className="flex gap-2">
-            <Typography as="link" href="/api/auth/signin">
+            <Typography as="link" href="/signin">
               Sign In
             </Typography>
             /

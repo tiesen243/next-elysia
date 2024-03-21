@@ -1,5 +1,6 @@
 interface Error {
-  message: string
+  message?: string
+  response?: string
   fieldsError?: Record<string, string>
 }
 

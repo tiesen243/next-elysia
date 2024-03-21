@@ -12,8 +12,8 @@ const signup = t.Object({
 export type SignupDto = UnwrapSchema<typeof signup>
 
 const signin = t.Object({
-  email: t.String({ format: 'email' }),
-  password: t.String({ minLength: 8 }),
+  email: t.String({ format: 'email', error: 'Invalid email' }),
+  password: t.String({ minLength: 8, error: 'Password must be at least 8 characters' }),
 })
 export type SigninDto = UnwrapSchema<typeof signin>
 

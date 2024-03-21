@@ -32,7 +32,11 @@ const authOptions = {
           email: String(credentials.email),
           password: String(credentials.password),
         })
-        if (error) throw new Error(error.value)
+
+        if (error)
+          throw new Error(error.message, {
+            cause: error.value,
+          })
 
         return data
       },
@@ -40,13 +44,15 @@ const authOptions = {
   ],
   trustHost: true,
   session: { strategy: 'jwt' },
+  pages: { signIn: '/signin' },
+
   callbacks: {
     jwt: async ({ token, user }) => {
       if (user) token.user = user as User
 
       // Fetch new user data
       const { data, error } = await api.user.getById[token.user.id].get()
-      if (error) throw new Error(error.value)
+      if (error) throw new Error(error.message)
       if (token.user.id) token.user = data
 
       return token

@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia'
 
-import UserService from '@/server/services/user.service'
 import UserModel from '@/server/models/user.model'
+import UserService from '@/server/services/user.service'
 
 export const userRoute = new Elysia({ name: 'Route.User', prefix: '/user' })
   // Set up
@@ -29,3 +29,8 @@ export const userRoute = new Elysia({ name: 'Route.User', prefix: '/user' })
     body: 'signin',
     detail: { tags: ['User'] },
   })
+
+// [DELETE] /api/elysia/user/delete/:id
+/* .delete('/delete/:id', async ({ params: { id }, userService }) => userService.deleteUser(id), { */
+/*   detail: { tags: ['User'] }, */
+/* }) */
