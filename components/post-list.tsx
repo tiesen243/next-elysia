@@ -5,7 +5,7 @@ import { XIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
-import { api } from '@/lib/api'
+import { api } from '@/lib/elysia/client'
 
 const PostList: React.FC<{ userId: string }> = ({ userId }) => {
   const { data, isLoading, isError, refetch } = useQuery({

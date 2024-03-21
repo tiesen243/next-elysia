@@ -8,12 +8,11 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
 import { FormField } from '@/components/ui/form-field'
-import { api, getQueryClient } from '@/lib/api'
-import { type CreatePostDto } from '@/server/dto/post.dto'
+import { api, getQueryClient } from '@/lib/elysia/client'
 
 const CreateForm: React.FC = () => {
   const formRef = React.useRef<HTMLFormElement>(null)
-  const { mutate, error, isPending } = useMutation<Res, Error, CreatePostDto>({
+  const { mutate, error, isPending } = useMutation<Res, Error, { content: string }>({
     mutationFn: async ({ content }) => {
       const { data, error } = await api.post.create.post({ content })
       if (error) throw error.value

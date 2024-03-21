@@ -8,12 +8,11 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
 import { FormField } from '@/components/ui/form-field'
-import { api } from '@/lib/api'
-import { type SignupDto } from '@/server/dto/user.dto'
+import { api } from '@/lib/elysia/client'
 
 const Page: NextPage = () => {
   const router = useRouter()
-  const { mutate, error, isPending } = useMutation<any, Error, SignupDto>({
+  const { mutate, error, isPending } = useMutation<any, Error, { name: string; email: string; password: string }>({
     mutationFn: async (inp) => {
       const { data, error } = await api.user.signup.post(inp)
       if (error) throw error.value

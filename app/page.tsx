@@ -26,7 +26,7 @@ const Page: NextPage = async () => {
           </Button>
 
           <Button variant="secondary" className="gap-2 rounded-full" asChild>
-            <a href="/api/elysia/swagger" target="_blank" rel="noopener noreferrer">
+            <a href="/api/elysia/docs" target="_blank" rel="noopener noreferrer">
               API Documentation <ExternalLinkIcon size={16} />
             </a>
           </Button>

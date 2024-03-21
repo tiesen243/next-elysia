@@ -24,7 +24,7 @@ export const app = new Elysia({ prefix: '/api/elysia' })
   })
   .use(
     swagger({
-      scalarConfig: { theme: 'moon' },
+      path: '/docs',
       documentation: {
         info: { title: 'Next.js + ElysiaJS', version: '1.0.0' },
         tags: [
@@ -41,5 +41,3 @@ export const app = new Elysia({ prefix: '/api/elysia' })
 
 const { handle } = app
 export { handle as GET, handle as POST, handle as PATCH, handle as DELETE }
-
-export type App = typeof app
