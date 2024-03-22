@@ -23,8 +23,6 @@ const CreateForm: React.FC = () => {
     },
   )
 
-  console.log('CreateForm', { error, isMutating })
-
   return (
     <card.Card>
       <card.CardHeader>
@@ -33,10 +31,8 @@ const CreateForm: React.FC = () => {
           className="flex items-center gap-4"
           action={(formData: FormData) => trigger({ content: String(formData.get('content')) })}
         >
-          {String(isMutating)}
-
           <FormField name="content" placeholder="What's on your mind?" className="flex-grow" />
-          <Button type="submit" size="icon">
+          <Button type="submit" size="icon" isLoading={isMutating}>
             <SendHorizonalIcon />
           </Button>
         </form>
