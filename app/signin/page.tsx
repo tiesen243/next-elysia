@@ -3,12 +3,13 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import useSWRMutation from 'swr/mutation'
+import { useCallback } from 'react'
 
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
 import { FormField } from '@/components/ui/form-field'
 import type { SigninDto } from '@/server/models/user.model'
-import useSWRMutation from 'swr/mutation'
 import { login } from './_action'
 
 const Page: NextPage = () => {
@@ -22,8 +23,13 @@ const Page: NextPage = () => {
       onSuccess: () => toast.success('Sign in successful!') && router.push('/'),
     },
   )
+
+  const action = useCallback(
+    async (formData: FormData) => trigger(Object.fromEntries(formData) as SigninDto),
+    [trigger],
+  )
   return (
-    <form action={(formData: FormData) => trigger(Object.fromEntries(formData) as SigninDto)}>
+    <form action={action}>
       <card.Card>
         <card.CardHeader>
           <card.CardTitle>Sign In</card.CardTitle>

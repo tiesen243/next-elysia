@@ -23,14 +23,15 @@ const CreateForm: React.FC = () => {
     },
   )
 
+  const action = React.useCallback(
+    async (formData: FormData) => trigger({ content: String(formData.get('content')) }),
+    [trigger],
+  )
+
   return (
     <card.Card>
       <card.CardHeader>
-        <form
-          ref={formRef}
-          className="flex items-center gap-4"
-          action={(formData: FormData) => trigger({ content: String(formData.get('content')) })}
-        >
+        <form ref={formRef} className="flex items-center gap-4" action={action}>
           <FormField name="content" placeholder="What's on your mind?" className="flex-grow" />
           <Button type="submit" size="icon" isLoading={isMutating}>
             <SendHorizonalIcon />
