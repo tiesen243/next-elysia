@@ -8,24 +8,14 @@ import useSWRMutation from 'swr/mutation'
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
 import { FormField } from '@/components/ui/form-field'
-
-const fetcher = async (arg: { content: string }) => {
-  const response = await fetch('/api/elysia/post/create', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(arg),
-  })
-  const data = await response.json()
-  if (data.error) throw data.error.value
-  return null
-}
+import { api } from '@/lib/api'
 
 const CreateForm: React.FC = () => {
   const formRef = React.useRef<HTMLFormElement>(null)
 
   const { trigger, error, isMutating } = useSWRMutation<null, Error, string, { content: string }, null>(
     'posts',
-    async (_, { arg }) => fetcher(arg),
+    async (_, { arg }) => api.post.create.post(arg).then(({ error }) => error && Promise.reject(error.value)),
     {
       throwOnError: false,
       onError: (error) => !error.fieldsError && toast.error(error.message),
