@@ -8,14 +8,24 @@ import useSWRMutation from 'swr/mutation'
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
 import { FormField } from '@/components/ui/form-field'
-import { api } from '@/lib/api'
+
+const fetcher = async (arg: { content: string }) => {
+  const response = await fetch('/api/elysia/post/create', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(arg),
+  })
+  const data = await response.json()
+  if (data.error) throw data.error.value
+  return data
+}
 
 const CreateForm: React.FC = () => {
   const formRef = React.useRef<HTMLFormElement>(null)
 
   const { trigger, error, isMutating } = useSWRMutation<null, Error, string, { content: string }, null>(
     'posts',
-    async (_, { arg }) => api.post.create.post(arg).then(({ error }) => error && Promise.reject(error.value)),
+    async (_, { arg }) => fetcher(arg),
     {
       throwOnError: false,
       onError: (error) => !error.fieldsError && toast.error(error.message),
@@ -23,15 +33,14 @@ const CreateForm: React.FC = () => {
     },
   )
 
-  const action = React.useCallback(
-    async (formData: FormData) => trigger({ content: String(formData.get('content')) }),
-    [trigger],
-  )
-
   return (
     <card.Card>
       <card.CardHeader>
-        <form ref={formRef} className="flex items-center gap-4" action={action}>
+        <form
+          ref={formRef}
+          className="flex items-center gap-4"
+          action={async (formData: FormData) => trigger({ content: String(formData.get('content')) })}
+        >
           <FormField name="content" placeholder="What's on your mind?" className="flex-grow" />
           <Button type="submit" size="icon" isLoading={isMutating}>
             <SendHorizonalIcon />
