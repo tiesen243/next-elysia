@@ -23,6 +23,8 @@ const CreateForm: React.FC = () => {
     },
   )
 
+  console.log(isMutating)
+
   return (
     <card.Card>
       <card.CardHeader>
