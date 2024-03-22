@@ -1,20 +1,14 @@
 'use client'
 
-import { QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider } from 'next-themes'
+import { SWRConfig } from 'swr'
 
-import { getQueryClient } from '@/lib/elysia/client'
-
-const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const queryClient = getQueryClient()
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class" disableTransitionOnChange>
-        {children}
-      </ThemeProvider>
-    </QueryClientProvider>
-  )
-}
+const Provider: React.FC<React.PropsWithChildren> = ({ children }) => (
+  <SWRConfig>
+    <ThemeProvider attribute="class" disableTransitionOnChange>
+      {children}
+    </ThemeProvider>
+  </SWRConfig>
+)
 
 export default Provider

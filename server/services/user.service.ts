@@ -33,7 +33,7 @@ export default class UserService {
     if (!user) return error('Not Found', { message: 'User not found' })
 
     const isPasswordMatch = await bcrypt.compare(password, user.password)
-    if (!isPasswordMatch) return error('Unauthorized', { message: 'Invalid password' })
+    if (!isPasswordMatch) return error('Unauthorized', { message: 'Password is incorrect' })
 
     return user
   }

@@ -1,24 +1,21 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
 import { XIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
-import { api } from '@/lib/elysia/client'
+import { api } from '@/lib/api'
+import useSWR from 'swr'
 
 const PostList: React.FC<{ userId: string }> = ({ userId }) => {
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryFn: () => api.post.getAll.get().then((res) => res.data),
-    queryKey: ['posts'],
-  })
+  const { data, isLoading, error, mutate } = useSWR('posts', () => api.post.getAll.get())
 
   if (isLoading) return <p>Loading...</p>
-  if (isError) return <p>Error</p>
+  if (error) return <p>Error: {error.message}</p>
 
   return (
     <ul className="grid grid-cols-1 gap-4 md:grid-cols-3">
-      {data?.map((post) => (
+      {data?.data?.map((post) => (
         <li key={post.id}>
           <card.Card className="h-full">
             <card.CardHeader>
@@ -30,7 +27,7 @@ const PostList: React.FC<{ userId: string }> = ({ userId }) => {
                   className="absolute right-2 top-2 size-6"
                   variant="destructive"
                   size="icon"
-                  onClick={() => api.post.delete[post.id].delete().then(() => refetch())}
+                  onClick={() => api.post.delete[post.id].delete().then(() => mutate())}
                 >
                   <XIcon />
                 </Button>

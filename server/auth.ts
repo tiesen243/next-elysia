@@ -3,7 +3,7 @@ import NextAuth, { type DefaultSession, type NextAuthConfig } from 'next-auth'
 import 'next-auth/jwt'
 import credentials from 'next-auth/providers/credentials'
 
-import { api } from '@/lib/elysia/client'
+import { api } from '@/lib/api'
 
 declare module 'next-auth' {
   interface Session {

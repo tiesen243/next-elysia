@@ -1,6 +1,5 @@
 'use client'
 
-import { useMutation } from '@tanstack/react-query'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -8,33 +7,23 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
 import { FormField } from '@/components/ui/form-field'
+import type { SigninDto } from '@/server/models/user.model'
+import useSWRMutation from 'swr/mutation'
 import { login } from './_action'
 
 const Page: NextPage = () => {
   const router = useRouter()
-  const { mutate, error, isPending } = useMutation<any, Error, { email: string; password: string }>({
-    mutationFn: async (data) =>
-      login(data).then((res) => {
-        if (res.success) return
-        else throw res
-      }),
-    onSuccess: () => {
-      toast.success('Sign up success')
-      router.push('/')
-      router.refresh()
+  const { trigger, error, isMutating } = useSWRMutation<unknown, Error, string, SigninDto, null>(
+    '/signin',
+    (_, { arg }) => login(arg).then((res) => !res.success && Promise.reject(res)),
+    {
+      throwOnError: false,
+      onError: (error) => !error.fieldsError && toast.error(error.message),
+      onSuccess: () => toast.success('Sign in successful!') && router.push('/'),
     },
-    onError: (error) => !error.fieldsError && toast.error(error.message),
-  })
-
+  )
   return (
-    <form
-      action={(formData: FormData) =>
-        mutate({
-          email: String(formData.get('email')),
-          password: String(formData.get('password')),
-        })
-      }
-    >
+    <form action={(formData: FormData) => trigger(Object.fromEntries(formData) as SigninDto)}>
       <card.Card>
         <card.CardHeader>
           <card.CardTitle>Sign In</card.CardTitle>
@@ -46,7 +35,7 @@ const Page: NextPage = () => {
         </card.CardContent>
 
         <card.CardFooter>
-          <Button className="w-full" type="submit" isLoading={isPending}>
+          <Button className="w-full" type="submit" isLoading={isMutating}>
             Sign In
           </Button>
         </card.CardFooter>

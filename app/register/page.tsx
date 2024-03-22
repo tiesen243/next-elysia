@@ -1,40 +1,31 @@
 'use client'
 
-import { useMutation } from '@tanstack/react-query'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import useSWRMutation from 'swr/mutation'
 
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
 import { FormField } from '@/components/ui/form-field'
-import { api } from '@/lib/elysia/client'
+import { api } from '@/lib/api'
+import type { SignupDto } from '@/server/models/user.model'
 
 const Page: NextPage = () => {
   const router = useRouter()
-  const { mutate, error, isPending } = useMutation<any, Error, { name: string; email: string; password: string }>({
-    mutationFn: async (inp) => {
-      const { data, error } = await api.user.signup.post(inp)
-      if (error) throw error.value
-      return data
+
+  const { trigger, error, isMutating } = useSWRMutation<null, Error, string, SignupDto, null>(
+    '/signup',
+    async (_, { arg }) => api.user.signup.post(arg).then(({ error }) => error && Promise.reject(error.value)),
+    {
+      throwOnError: true,
+      onError: (error) => !error.fieldsError && toast.error(error.message),
+      onSuccess: () => toast.success('Sign up successful!') && router.push('/login'),
     },
-    onSuccess: () => {
-      toast.success('Sign up success')
-      router.push('/api/auth/signin')
-    },
-    onError: (error) => !error.fieldsError && toast.error(error.message),
-  })
+  )
 
   return (
-    <form
-      action={(formData: FormData) =>
-        mutate({
-          name: String(formData.get('name')),
-          email: String(formData.get('email')),
-          password: String(formData.get('password')),
-        })
-      }
-    >
+    <form action={(formData: FormData) => trigger(Object.fromEntries(formData) as SignupDto)}>
       <card.Card>
         <card.CardHeader>
           <card.CardTitle>Sign Up</card.CardTitle>
@@ -47,7 +38,7 @@ const Page: NextPage = () => {
         </card.CardContent>
 
         <card.CardFooter>
-          <Button className="w-full" type="submit" isLoading={isPending}>
+          <Button className="w-full" type="submit" isLoading={isMutating}>
             Sign Up
           </Button>
         </card.CardFooter>
