@@ -17,7 +17,7 @@ const fetcher = async (arg: { content: string }) => {
   })
   const data = await response.json()
   if (data.error) throw data.error.value
-  return data
+  return null
 }
 
 const CreateForm: React.FC = () => {
