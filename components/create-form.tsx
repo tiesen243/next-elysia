@@ -28,9 +28,8 @@ const CreateForm: React.FC = () => {
         <form
           ref={formRef}
           className="flex items-center gap-4"
-          action={async (formData: FormData) => {
-            await trigger({ content: formData.get('content') as string })
-            formRef.current?.reset()
+          action={(formData: FormData) => {
+            trigger({ content: formData.get('content') as string }).then(() => formRef.current?.reset())
           }}
         >
           <FormField name="content" placeholder="What's on your mind?" className="flex-grow" />

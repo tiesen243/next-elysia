@@ -26,8 +26,8 @@ const Page: NextPage = () => {
 
   return (
     <form
-      action={async (fd: FormData) => {
-        await trigger(Object.fromEntries(fd.entries()) as SignupDto)
+      action={(fd: FormData) => {
+        trigger(Object.fromEntries(fd.entries()) as SignupDto)
       }}
     >
       <card.Card>
