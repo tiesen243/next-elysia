@@ -2,6 +2,7 @@
 
 import type { NextPage } from 'next'
 import { useRouter } from 'next/navigation'
+import { useFormStatus } from 'react-dom'
 import { toast } from 'sonner'
 import useSWRMutation from 'swr/mutation'
 
@@ -13,7 +14,7 @@ import { login } from './_action'
 
 const Page: NextPage = () => {
   const router = useRouter()
-  const { trigger, error, isMutating } = useSWRMutation<unknown, Error, string, SigninDto, null>(
+  const { trigger, error } = useSWRMutation<unknown, Error, string, SigninDto, null>(
     '/signin',
     async (_, { arg }) => login(arg).then((res) => !res.success && Promise.reject(res)),
     {
@@ -28,11 +29,7 @@ const Page: NextPage = () => {
   )
 
   return (
-    <form
-      action={(fd: FormData) => {
-        trigger(Object.fromEntries(fd.entries()) as SigninDto)
-      }}
-    >
+    <form action={(fd: FormData) => trigger(Object.fromEntries(fd.entries()) as SigninDto)}>
       <card.Card>
         <card.CardHeader>
           <card.CardTitle>Sign In</card.CardTitle>
@@ -44,9 +41,7 @@ const Page: NextPage = () => {
         </card.CardContent>
 
         <card.CardFooter>
-          <Button className="w-full" type="submit" isLoading={isMutating}>
-            Sign In
-          </Button>
+          <SubmitButton />
         </card.CardFooter>
       </card.Card>
     </form>
@@ -54,3 +49,12 @@ const Page: NextPage = () => {
 }
 
 export default Page
+
+const SubmitButton: React.FC = () => {
+  const { pending } = useFormStatus()
+  return (
+    <Button className="w-full" type="submit" isLoading={pending}>
+      Sign In
+    </Button>
+  )
+}

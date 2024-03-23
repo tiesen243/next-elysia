@@ -44,7 +44,7 @@ const authOptions = {
   ],
   trustHost: true,
   session: { strategy: 'jwt' },
-  pages: { signIn: '/signin' },
+  pages: { signIn: '/signin', error: '/signin' },
 
   callbacks: {
     jwt: async ({ token, user }) => {
