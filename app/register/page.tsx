@@ -4,7 +4,6 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import useSWRMutation from 'swr/mutation'
-import { useCallback } from 'react'
 
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
@@ -25,13 +24,12 @@ const Page: NextPage = () => {
     },
   )
 
-  const action = useCallback(
-    async (formData: FormData) => trigger(Object.fromEntries(formData) as SignupDto),
-    [trigger],
-  )
-
   return (
-    <form action={action}>
+    <form
+      action={(fd: FormData) => {
+        trigger(Object.fromEntries(fd.entries()) as SignupDto)
+      }}
+    >
       <card.Card>
         <card.CardHeader>
           <card.CardTitle>Sign Up</card.CardTitle>

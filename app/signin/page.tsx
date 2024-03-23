@@ -4,7 +4,6 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import useSWRMutation from 'swr/mutation'
-import { useCallback } from 'react'
 
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
@@ -16,20 +15,24 @@ const Page: NextPage = () => {
   const router = useRouter()
   const { trigger, error, isMutating } = useSWRMutation<unknown, Error, string, SigninDto, null>(
     '/signin',
-    (_, { arg }) => login(arg).then((res) => !res.success && Promise.reject(res)),
+    async (_, { arg }) => login(arg).then((res) => !res.success && Promise.reject(res)),
     {
       throwOnError: false,
       onError: (error) => !error.fieldsError && toast.error(error.message),
-      onSuccess: () => toast.success('Sign in successful!') && router.push('/'),
+      onSuccess: () => {
+        toast.success('Sign in successful!')
+        router.push('/')
+        router.refresh()
+      },
     },
   )
 
-  const action = useCallback(
-    async (formData: FormData) => trigger(Object.fromEntries(formData) as SigninDto),
-    [trigger],
-  )
   return (
-    <form action={action}>
+    <form
+      action={(fd: FormData) => {
+        trigger(Object.fromEntries(fd.entries()) as SigninDto)
+      }}
+    >
       <card.Card>
         <card.CardHeader>
           <card.CardTitle>Sign In</card.CardTitle>

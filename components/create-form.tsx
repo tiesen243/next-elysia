@@ -12,14 +12,13 @@ import { api } from '@/lib/api'
 
 const CreateForm: React.FC = () => {
   const formRef = React.useRef<HTMLFormElement>(null)
-
-  const { trigger, error, isMutating } = useSWRMutation<null, Error, string, { content: string }, null>(
+  const { trigger, isMutating, error } = useSWRMutation<null, Error, string, { content: string }, null>(
     'posts',
     async (_, { arg }) => api.post.create.post(arg).then(({ error }) => error && Promise.reject(error.value)),
     {
-      throwOnError: false,
+      throwOnError: true,
       onError: (error) => !error.fieldsError && toast.error(error.message),
-      onSuccess: () => toast.success('Post created!') && formRef.current?.reset(),
+      onSuccess: () => toast.success('Sign up successful!'),
     },
   )
 
@@ -29,7 +28,10 @@ const CreateForm: React.FC = () => {
         <form
           ref={formRef}
           className="flex items-center gap-4"
-          action={async (formData: FormData) => trigger({ content: String(formData.get('content')) })}
+          action={(formData: FormData) => {
+            trigger({ content: formData.get('content') as string })
+            formRef.current?.reset()
+          }}
         >
           <FormField name="content" placeholder="What's on your mind?" className="flex-grow" />
           <Button type="submit" size="icon" isLoading={isMutating}>
