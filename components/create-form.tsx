@@ -28,8 +28,8 @@ const CreateForm: React.FC = () => {
         <form
           ref={formRef}
           className="flex items-center gap-4"
-          action={(formData: FormData) => {
-            trigger({ content: formData.get('content') as string })
+          action={async (formData: FormData) => {
+            await trigger({ content: formData.get('content') as string })
             formRef.current?.reset()
           }}
         >
