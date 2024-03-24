@@ -29,7 +29,7 @@ const PostList: React.FC<{ userId: string }> = ({ userId }) => {
                   size="icon"
                   onClick={async () =>
                     api.post
-                      .delete({ id: post.id })
+                      .deletePost({ id: post.id })
                       .delete()
                       .then(() => mutate())
                   }
