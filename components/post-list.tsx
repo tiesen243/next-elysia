@@ -27,7 +27,12 @@ const PostList: React.FC<{ userId: string }> = ({ userId }) => {
                   className="absolute right-2 top-2 size-6"
                   variant="destructive"
                   size="icon"
-                  onClick={() => api.post.delete[post.id].delete().then(() => mutate())}
+                  onClick={async () =>
+                    api.post
+                      .delete({ id: post.id })
+                      .delete()
+                      .then(() => mutate())
+                  }
                 >
                   <XIcon />
                 </Button>

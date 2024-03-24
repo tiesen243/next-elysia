@@ -14,7 +14,7 @@ import { login } from './_action'
 
 const Page: NextPage = () => {
   const router = useRouter()
-  const { trigger, error } = useSWRMutation<unknown, Error, string, SigninDto, null>(
+  const { trigger, error } = useSWRMutation<unknown, Error, string, SigninDto>(
     '/signin',
     async (_, { arg }) => login(arg).then((res) => !res.success && Promise.reject(res)),
     {

@@ -1,5 +1,5 @@
 export const baseUrl =
-  process.env.NODE_ENV === 'production' ? 'https://next-elysia.vercel.app' : 'http://localhost:3000'
+  process.env.NODE_ENV === 'production' ? 'https://next-elysia.vercel.app' : 'http://192.168.1.7:3000'
 
 export const siteConfig = {
   metadataBase: new URL(baseUrl),

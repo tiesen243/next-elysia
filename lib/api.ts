@@ -1,8 +1,5 @@
 import { baseUrl } from '@/lib/site'
 import type { app } from '@/server/elysia'
-import { edenTreaty } from '@elysiajs/eden/treaty'
-import { edenFetch } from '@elysiajs/eden/fetch'
+import { treaty } from '@elysiajs/eden'
 
-export const api = edenTreaty<typeof app>(baseUrl).api.elysia
-
-export const fetch = edenFetch<typeof app>(baseUrl)
+export const api = treaty<typeof app>(baseUrl).api.elysia

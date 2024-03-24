@@ -14,7 +14,7 @@ import type { SignupDto } from '@/server/models/user.model'
 const Page: NextPage = () => {
   const router = useRouter()
 
-  const { trigger, error, isMutating } = useSWRMutation<null, Error, string, SignupDto, null>(
+  const { trigger, error, isMutating } = useSWRMutation<unknown, Error, string, SignupDto>(
     '/signup',
     async (_, { arg }) => api.user.signup.post(arg).then(({ error }) => error && Promise.reject(error.value)),
     {

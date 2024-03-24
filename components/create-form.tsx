@@ -12,13 +12,13 @@ import { api } from '@/lib/api'
 
 const CreateForm: React.FC = () => {
   const formRef = React.useRef<HTMLFormElement>(null)
-  const { trigger, isMutating, error } = useSWRMutation<null, Error, string, { content: string }, null>(
+  const { trigger, isMutating, error } = useSWRMutation<unknown, Error, string, { content: string }>(
     'posts',
     async (_, { arg }) => api.post.create.post(arg).then(({ error }) => error && Promise.reject(error.value)),
+
     {
-      throwOnError: true,
       onError: (error) => !error.fieldsError && toast.error(error.message),
-      onSuccess: () => toast.success('Sign up successful!'),
+      onSuccess: () => toast.success('Post created'),
     },
   )
 

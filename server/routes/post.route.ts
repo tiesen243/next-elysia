@@ -25,5 +25,6 @@ export const postRoute = new Elysia({ name: 'Route.Post', prefix: '/post' })
 
   // [DELETE] /api/elysia/post/delete/:id
   .delete('/delete/:id', async ({ params: { id }, postService, user }) => postService.deletePost(id, user), {
+    params: 'deletePost',
     detail: { tags: ['Post'] },
   })
