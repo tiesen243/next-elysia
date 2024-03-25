@@ -1,6 +1,7 @@
 export const getBaseUrl = () => {
-  if (process.env.NODE_ENV === 'production' && process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`
-  else return 'http://localhost:3000'
+  if (typeof window !== 'undefined') return window.location.origin
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`
+  return `http://localhost:${process.env.PORT ?? 3000}`
 }
 
 export const siteConfig = {
