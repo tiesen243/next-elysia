@@ -54,9 +54,9 @@ const PostList: React.FC<{ userId: string }> = ({ userId }) => {
         className="mt-4 w-full"
         onClick={() => setSize((prev) => prev + 1)}
         isLoading={isLoading || isValidating}
-        disabled={isLoadingMore || isReachingEnd}
+        disabled={isLoadingMore ?? isReachingEnd}
       >
-        {isLoadingMore || isReachingEnd ? 'No More' : 'Load More'}
+        {isLoadingMore ?? isReachingEnd ? 'No More' : 'Load More'}
       </Button>
     </>
   )
