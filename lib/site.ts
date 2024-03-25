@@ -1,6 +1,6 @@
 export const getBaseUrl = () => {
-  if (process.env.VERCEL_URL) return 'https://next-elysia.vercel.app'
-  else return 'http://192.168.1.7:3000'
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`
+  else return 'http://localhost:3000'
 }
 
 export const siteConfig = {
