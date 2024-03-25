@@ -1,8 +1,10 @@
-export const baseUrl =
-  process.env.NODE_ENV === 'production' ? 'https://next-elysia.vercel.app' : 'http://192.168.1.7:3000'
+export const getBaseUrl = () => {
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`
+  else return 'http://192.168.1.7:3000'
+}
 
 export const siteConfig = {
-  metadataBase: new URL(baseUrl),
+  metadataBase: new URL(getBaseUrl()),
   title: 'Next.js + Elysia',
   description: 'A Next.js template with Elysiajs',
   applicationName: 'Next.js + Elysia',
@@ -11,7 +13,7 @@ export const siteConfig = {
     title: 'Next.js + Elysia',
     description: 'A Next.js template with Elysiajs',
     type: 'website',
-    url: baseUrl,
+    url: getBaseUrl(),
     siteName: 'Next.js + Elysia',
   },
   twitter: {
@@ -20,6 +22,6 @@ export const siteConfig = {
     card: 'summary_large_image',
   },
   alternates: {
-    canonical: baseUrl,
+    canonical: getBaseUrl(),
   },
 }
