@@ -1,48 +1,64 @@
 'use client'
 
-import { XIcon } from 'lucide-react'
-
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
 import { api } from '@/lib/api'
-import useSWR from 'swr'
+import { XIcon } from 'lucide-react'
+import useSWRInfinite from 'swr/infinite'
 
 const PostList: React.FC<{ userId: string }> = ({ userId }) => {
-  const { data, isLoading, error, mutate } = useSWR('posts', () => api.post.getAll.get())
+  const { data, size, setSize, isValidating, isLoading, mutate } = useSWRInfinite(
+    (index) => `posts-${index}`,
+    async (key) => {
+      const page = Number(key.split('-')[1]) + 1
+      const { data, error } = await api.post.getAll.get({ query: { page, limit: 2 } })
+      if (error) throw error.value
+      return data
+    },
+  )
 
-  if (isLoading) return <p>Loading...</p>
-  if (error) return <p>Error: {error.message}</p>
+  const isEmpty = data?.[0]?.length === 0
+  const isLoadingMore = isLoading || (size > 0 && data && typeof data[size - 1] === 'undefined')
+  const isReachingEnd = isEmpty || (data && data[data.length - 1]?.length < 2)
 
   return (
-    <ul className="grid grid-cols-1 gap-4 md:grid-cols-3">
-      {data?.data?.map((post) => (
-        <li key={post.id}>
-          <card.Card className="h-full">
+    <>
+      <section className="space-y-4">
+        {data?.flat().map((post) => (
+          <card.Card key={post.id} className="relative">
+            {userId === post.author.id && (
+              <Button
+                variant="destructive"
+                size="icon"
+                className="absolute right-2 top-2 z-10"
+                onClick={() =>
+                  api.post
+                    .deletePost({ id: post.id })
+                    .delete()
+                    .then(() => mutate())
+                }
+              >
+                <XIcon />
+              </Button>
+            )}
             <card.CardHeader>
               <card.CardDescription>{post.author.name}</card.CardDescription>
               <card.CardTitle>{post.content}</card.CardTitle>
-
-              {userId === post.author.id && (
-                <Button
-                  className="absolute right-2 top-2 size-6"
-                  variant="destructive"
-                  size="icon"
-                  onClick={async () =>
-                    api.post
-                      .deletePost({ id: post.id })
-                      .delete()
-                      .then(() => mutate())
-                  }
-                >
-                  <XIcon />
-                </Button>
-              )}
             </card.CardHeader>
           </card.Card>
-        </li>
-      ))}
-    </ul>
+        ))}
+      </section>
+
+      <Button
+        variant="ghost"
+        className="mt-4 w-full"
+        onClick={() => setSize((prev) => prev + 1)}
+        isLoading={isLoading || isValidating}
+        disabled={isLoadingMore || isReachingEnd}
+      >
+        {isLoadingMore || isReachingEnd ? 'No More' : 'Load More'}
+      </Button>
+    </>
   )
 }
-
 export default PostList

@@ -12,7 +12,10 @@ export const postRoute = new Elysia({ name: 'Route.Post', prefix: '/post' })
   // public routes
 
   // [GET] /api/elysia/post/getAll
-  .get('/getAll', async ({ postService }) => postService.getPosts(), { detail: { tags: ['Post'] } })
+  .get('/getAll', async ({ postService, query }) => postService.getPosts(query), {
+    query: 'getPosts',
+    detail: { tags: ['Post'] },
+  })
 
   // protected routes
   .use(AuthService)

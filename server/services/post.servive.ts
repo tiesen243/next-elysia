@@ -2,11 +2,13 @@ import type { User } from 'next-auth'
 import { error } from 'elysia'
 
 import db from '@/prisma'
-import type { CreatePostDto } from '@/server/models/post.model'
+import type { CreatePostDto, GetPostsDto } from '@/server/models/post.model'
 
 export default class PostService {
-  async getPosts() {
+  async getPosts({ page = 1, limit }: GetPostsDto) {
     const posts = await db.post.findMany({
+      take: limit || 10,
+      skip: (page - 1) * (limit || 10),
       include: { author: { select: { id: true, name: true } } },
       orderBy: { createdAt: 'desc' },
     })
