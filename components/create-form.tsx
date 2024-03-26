@@ -2,25 +2,15 @@
 
 import { SendHorizonalIcon } from 'lucide-react'
 import * as React from 'react'
-import { toast } from 'sonner'
-import useSWRMutation from 'swr/mutation'
 
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
 import { FormField } from '@/components/ui/form-field'
-import { api } from '@/lib/api'
+import { usePost } from '@/lib/hooks/post'
 
 const CreateForm: React.FC = () => {
   const formRef = React.useRef<HTMLFormElement>(null)
-  const { trigger, isMutating, error } = useSWRMutation<unknown, Error, string, { content: string }>(
-    'posts',
-    async (_, { arg }) => api.post.create.post(arg).then(({ error }) => error && Promise.reject(error.value)),
-
-    {
-      onError: (error) => !error.fieldsError && toast.error(error.message),
-      onSuccess: () => toast.success('Post created'),
-    },
-  )
+  const { trigger, isMutating, createError } = usePost({})
 
   return (
     <card.Card>
@@ -38,7 +28,7 @@ const CreateForm: React.FC = () => {
           </Button>
         </form>
 
-        <card.CardDescription className="text-destructive">{error?.fieldsError?.content}</card.CardDescription>
+        <card.CardDescription className="text-destructive">{createError?.fieldsError?.content}</card.CardDescription>
       </card.CardHeader>
     </card.Card>
   )

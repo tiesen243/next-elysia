@@ -2,33 +2,22 @@
 
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
-import { api } from '@/lib/api'
+import { usePost } from '@/lib/hooks/post'
 import { XIcon } from 'lucide-react'
-import useSWR from 'swr'
 
 const PostList: React.FC<{ userId: string }> = ({ userId }) => {
-  const { data, error, isLoading, mutate } = useSWR('posts', () =>
-    api.post.getAll.get({ query: {} }).then(({ error, data }) => (error ? Promise.reject(error) : data)),
-  )
-
-  if (isLoading) return <div>Loading...</div>
-  if (error || !data) return <div>Error: {error.message}</div>
+  const { posts, deletePost, setSize, isLoadingMore, isReachingEnd } = usePost({})
 
   return (
     <section className="space-y-4">
-      {data.map((post) => (
+      {posts.map((post) => (
         <card.Card key={post.id} className="relative">
           {userId === post.author.id && (
             <Button
               variant="destructive"
               size="icon"
               className="absolute right-2 top-2 z-10"
-              onClick={async () =>
-                api.post
-                  .deletePost({ id: post.id })
-                  .delete()
-                  .then(() => mutate())
-              }
+              onClick={async () => deletePost(post.id)}
             >
               <XIcon />
             </Button>
@@ -39,6 +28,16 @@ const PostList: React.FC<{ userId: string }> = ({ userId }) => {
           </card.CardHeader>
         </card.Card>
       ))}
+
+      <Button
+        variant="ghost"
+        onClick={() => setSize((size) => size + 1)}
+        className="w-full"
+        isLoading={isLoadingMore === true && isReachingEnd === false}
+        disabled={isReachingEnd}
+      >
+        {isReachingEnd ? 'No more posts' : 'Load more'}
+      </Button>
     </section>
   )
 }
