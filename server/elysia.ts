@@ -6,6 +6,7 @@ import { userRoute } from '@/server/routes/user.route'
 
 export const app = new Elysia({ prefix: '/api/elysia' })
   // Plugins
+
   .use(
     swagger({
       path: '/docs',

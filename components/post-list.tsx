@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import * as card from '@/components/ui/card'
-import { usePost } from '@/lib/hooks/post'
+import { usePost } from '@/lib/hooks'
 import { XIcon } from 'lucide-react'
 
 const PostList: React.FC<{ userId: string }> = ({ userId }) => {

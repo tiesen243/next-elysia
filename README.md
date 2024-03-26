@@ -44,6 +44,8 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 You can access swagger ui at [/api/elysia/dcos](http://localhost:3000/api/elysia/docs)
 
+> Note: `trigger` function form `swr/mutation` only works with method chaining. You can't use it with async/await.
+
 ## Learn More
 
 - Documentation: [here](https://tiesen.id.vn/blogs/next-elysia.html)

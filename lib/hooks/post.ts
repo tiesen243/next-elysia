@@ -55,5 +55,6 @@ export const usePost = ({ PAGE_SIZE = 2 }: { PAGE_SIZE?: number }) => {
     trigger,
     setSize,
     deletePost,
+    mutate,
   }
 }

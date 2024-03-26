@@ -8,7 +8,7 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => (
   <SWRConfig
     value={{
       onError: (error: Error) => !error.fieldsError && toast.error(error.message),
-      onSuccess: (data: Res) => toast.success(data.message),
+      onSuccess: (data: Res) => data.message && toast.success(data.message),
     }}
   >
     <ThemeProvider attribute="class" disableTransitionOnChange>
