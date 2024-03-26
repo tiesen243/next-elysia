@@ -1,5 +1,15 @@
 This is a [Next.js](https://nextjs.org/) + [ElysiaJS](https://elysiajs.com/) project bootstrapped
 
+## Libraries
+
+1. [ElysiaJS](https://elysiajs.com/)
+2. [Next.js](https://nextjs.org/)
+3. [Prisma ORM](https://prisma.io/)
+4. [Auth.js](https://authjs.dev/)
+5. [SWR](https://swr.vercel.app/)
+6. [Shadcn/ui](http://ui.shadcn.com/)
+7. And more....
+
 ## Getting Started
 
 First, clone this repository
@@ -32,7 +42,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-You can access swagger ui at [/api/elysia/swagger](http://localhost:3000/api/elysia/swager)
+You can access swagger ui at [/api/elysia/dcos](http://localhost:3000/api/elysia/docs)
 
 ## Learn More
 
