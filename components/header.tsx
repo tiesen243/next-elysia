@@ -16,11 +16,11 @@ const Header: React.FC = async () => {
       <div className="container flex items-center justify-between">
         {!session || !session.user ? (
           <span className="flex gap-2">
-            <Typography as="link" href="/signin">
+            <Typography as="link" href="/auth/signin">
               Sign In
             </Typography>
             /
-            <Typography as="link" href="/register">
+            <Typography as="link" href="/auth/register">
               Sign Up
             </Typography>
           </span>

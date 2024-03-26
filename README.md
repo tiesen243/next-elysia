@@ -1,5 +1,12 @@
 This is a [Next.js](https://nextjs.org/) + [ElysiaJS](https://elysiajs.com/) project bootstrapped
 
+## Table of Contents
+
+1. [Tech Stack](#tech-stack)
+2. [Getting Started](#getting-started)
+3. [Notes](#notes)
+4. [Learn More](#learn-more)
+
 ## Tech Stack
 
 1. [ElysiaJS](https://elysiajs.com/)
@@ -44,7 +51,41 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 You can access swagger ui at [/api/elysia/dcos](http://localhost:3000/api/elysia/docs)
 
-> Note: `trigger` function form `swr/mutation` only works with method chaining. You can't use it with async/await.
+## Notes
+
+1. Note: `trigger` function form `swr/mutation` only works with method chaining. You can't use it with async/await. If you use async/await, `isMutating` will always return `false`, so you need to use `useFormStatus` to check the `pending` status of the form.
+
+2. If you want to use `middleware`, this is the example:
+
+```typescript
+// middleware.ts
+
+import { auth } from '@/server/auth'
+import { NextResponse, type NextRequest } from 'next/server'
+
+export const middleware = async (req: NextRequest) => {
+  const session = await auth()
+  const url = req.nextUrl
+  const path = url.pathname
+
+  // Redirect to sign in if user is not signed in and not on the sign in page
+  if (!path.startsWith('/auth') && !session) return NextResponse.redirect(new URL('/auth/signin', url))
+
+  // Redirect to dashboard if user is already signed in
+  if (path.startsWith('/auth') && session) return NextResponse.redirect(new URL('/', url))
+
+  // Redirect to homepage if user is not admin
+  // Remember to add role to the user object in `schema.prisma`
+  if (path.startsWith('/dashboard') && session && session.user.role !== 'ADMIN')
+    return NextResponse.redirect(new URL('/', url))
+
+  return NextResponse.next()
+}
+
+export const config = {
+  matcher: ['/auth/:path*', '/dashboard/:path*'],
+}
+```
 
 ## Learn More
 

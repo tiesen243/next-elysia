@@ -22,7 +22,7 @@ const Page: NextPage = () => {
   return (
     <form
       action={(fd: FormData) => {
-        trigger(Object.fromEntries(fd.entries()) as SignupDto).then(() => router.push('/signin'))
+        trigger(Object.fromEntries(fd.entries()) as SignupDto).then(() => router.push('/auth/signin'))
       }}
     >
       <card.Card>
