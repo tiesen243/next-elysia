@@ -2,7 +2,6 @@
 
 import type { NextPage } from 'next'
 import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
 import useSWRMutation from 'swr/mutation'
 
 import { Button } from '@/components/ui/button'
@@ -14,20 +13,16 @@ import type { SignupDto } from '@/server/models/user.model'
 const Page: NextPage = () => {
   const router = useRouter()
 
-  const { trigger, error, isMutating } = useSWRMutation<unknown, Error, string, SignupDto>(
-    '/signup',
-    async (_, { arg }) => api.user.signup.post(arg).then(({ error }) => error && Promise.reject(error.value)),
-    {
-      throwOnError: true,
-      onError: (error) => !error.fieldsError && toast.error(error.message),
-      onSuccess: () => toast.success('Sign up successful!') && router.push('/login'),
-    },
+  const { trigger, error, isMutating } = useSWRMutation<Res, Error, string, SignupDto>('/signup', (_, { arg }) =>
+    api.user.signup
+      .post(arg)
+      .then(({ error }) => (error ? Promise.reject(error.value) : Promise.resolve({ message: 'Sign up success' }))),
   )
 
   return (
     <form
       action={(fd: FormData) => {
-        trigger(Object.fromEntries(fd.entries()) as SignupDto)
+        trigger(Object.fromEntries(fd.entries()) as SignupDto).then(() => router.push('/signin'))
       }}
     >
       <card.Card>

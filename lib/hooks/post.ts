@@ -1,4 +1,3 @@
-import { toast } from 'sonner'
 import useSWRInfinite from 'swr/infinite'
 import useSWRMutation from 'swr/mutation'
 
@@ -15,7 +14,7 @@ export const usePost = ({ PAGE_SIZE = 2 }: { PAGE_SIZE?: number }) => {
   } = useSWRInfinite(
     (index) => String(index + 1),
     async (key) => {
-      const page = Number(key.replace('post-', '')) || 1
+      const page = Number(key.replace('posts-', '')) || 1
       const { data, error } = await api.post.getAll.get({ query: { page, limit: PAGE_SIZE } })
       if (error) throw error.value
       return data
@@ -26,21 +25,11 @@ export const usePost = ({ PAGE_SIZE = 2 }: { PAGE_SIZE?: number }) => {
     trigger,
     isMutating,
     error: createError,
-  } = useSWRMutation<unknown, Error, string, { content: string }>(
-    `posts`,
-    async (_, { arg }) => {
-      const { data, error } = await api.post.create.post(arg)
-      if (error) throw error.value
-      return data
-    },
-    {
-      onError: (error) => !error.fieldsError && toast.error(error.message),
-      onSuccess: () => {
-        mutate()
-        toast.success('Post created successfully')
-      },
-    },
-  )
+  } = useSWRMutation<Res, Error, string, { content: string }>('posts', async (_, { arg }) => {
+    const { data, error } = await api.post.create.post(arg)
+    if (error) throw error.value
+    else return { message: data.message, data: data }
+  })
 
   const posts = data ? data.flat() : []
 

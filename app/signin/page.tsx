@@ -3,7 +3,6 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/navigation'
 import { useFormStatus } from 'react-dom'
-import { toast } from 'sonner'
 import useSWRMutation from 'swr/mutation'
 
 import { Button } from '@/components/ui/button'
@@ -14,22 +13,19 @@ import { login } from './_action'
 
 const Page: NextPage = () => {
   const router = useRouter()
-  const { trigger, error } = useSWRMutation<unknown, Error, string, SigninDto>(
-    '/signin',
-    async (_, { arg }) => login(arg).then((res) => !res.success && Promise.reject(res)),
-    {
-      throwOnError: false,
-      onError: (error) => !error.fieldsError && toast.error(error.message),
-      onSuccess: () => {
-        toast.success('Sign in successful!')
-        router.push('/')
-        router.refresh()
-      },
-    },
+  const { trigger, error } = useSWRMutation<Res, Error, string, SigninDto>('/signin', async (_, { arg }) =>
+    login(arg).then((res) => (!res.success ? Promise.reject(res) : Promise.resolve({ message: res.message }))),
   )
 
+  const action = (formData: FormData) => {
+    trigger(Object.fromEntries(formData.entries()) as SigninDto).then(() => {
+      router.push('/')
+      router.refresh()
+    })
+  }
+
   return (
-    <form action={(fd: FormData) => trigger(Object.fromEntries(fd.entries()) as SigninDto)}>
+    <form action={action}>
       <card.Card>
         <card.CardHeader>
           <card.CardTitle>Sign In</card.CardTitle>
