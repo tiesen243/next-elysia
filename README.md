@@ -1,6 +1,6 @@
 This is a [Next.js](https://nextjs.org/) + [ElysiaJS](https://elysiajs.com/) project bootstrapped
 
-## Libraries
+## Tech Stack
 
 1. [ElysiaJS](https://elysiajs.com/)
 2. [Next.js](https://nextjs.org/)
